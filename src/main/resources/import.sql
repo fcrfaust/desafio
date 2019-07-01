@@ -1,0 +1,2 @@
+INSERT INTO url ( url_original, url_short, expiry_date,) VALUES ('https://www.google.com.br', 'a1', '2020-07-01T01:50:56');
+INSERT INTO url ( url_original, url_short, expiry_date,) VALUES ('https://www.globo.com', 'b2', '2018-07-01T01:50:56');
