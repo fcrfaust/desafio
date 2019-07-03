@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Url;
 import com.example.demo.repository.Urls;
+import com.example.demo.service.UrlService;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -31,45 +32,25 @@ import net.bytebuddy.utility.RandomString;
 public class UrlResource {
 	
 	@Autowired
-	private Urls urls;	
+	private UrlService urlService;
 	
 	@PostMapping("/url")
-	public Url addUrl(@Valid @RequestBody Url url) {
-		url.setExpiryDate(createExpiryDate());
-		url.setUrlShort(RandomString.make(32));
-		return urls.save(url);
+	public Url addUrl(@Valid @RequestBody Url url) {;
+		return urlService.addUrl(url);
 	}
 	
 	@GetMapping("/url")
 	public List<Url> listUrl() {
-		return urls.findAll();
+		return urlService.findAll();
+		
 	}
 	
 	@RequestMapping(value="/{shortUrl}", method=RequestMethod.GET)
-	public ResponseEntity<Url> find(@PathVariable String shortUrl, HttpServletResponse httpServletResponse) throws URISyntaxException{
-		Url url = urls.findByShortUrl(shortUrl);
-		if (url == null) 
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	public ResponseEntity<Url> find(@PathVariable String shortUrl, HttpServletResponse httpServletResponse) throws URISyntaxException{	
+		return urlService.findRedirect(shortUrl,httpServletResponse);
+	}
+	
 
-		if (url.getExpiryDate().compareTo(Calendar.getInstance().getTime()) < 0)
-			return ResponseEntity.status(HttpStatus.GONE).body(null);
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location", url.getUrlOriginal());    
-		return new ResponseEntity(headers,HttpStatus.FOUND);
-	}
-	
-	public Date createExpiryDate() {
-	    Calendar calendar = Calendar.getInstance();
-	    calendar.add(Calendar.HOUR_OF_DAY, 1);
-	    return calendar.getTime();
-	}
-	
-	public String createShortUrl() {
-		String uuid = UUID.randomUUID().toString();
-        return uuid;
-	    
-	}
 	
 	
 }

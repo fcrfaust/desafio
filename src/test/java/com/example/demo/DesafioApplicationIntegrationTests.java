@@ -18,8 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.demo.model.Url;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -27,8 +25,6 @@ public class DesafioApplicationIntegrationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
-	
 	
 	@Test
 	public void healthCheck() throws Exception {
@@ -44,12 +40,18 @@ public class DesafioApplicationIntegrationTests {
 					.andExpect(jsonPath("$[0].urlOriginal").value("https://www.google.com.br"))
 					.andExpect(jsonPath("$[0].urlShort").value("a1"))
 					.andExpect(jsonPath("$[0].expiryDate").value("2020-07-01T04:50:56.000+0000"));
-	    }
+	}
 	
 	@Test
 	public void redirectShortUrlSucess() throws Exception {
 		this.mockMvc.perform(get("/a1"))
 					.andExpect(redirectedUrl("https://www.google.com.br")).andExpect(status().isFound());
+    }
+	
+	@Test
+	public void redirectShortUrlFail() throws Exception {
+		this.mockMvc.perform(get("/failfailfailfailfail123"))
+					.andExpect(status().isNotFound());
     }
 	
 	@Test
