@@ -29,7 +29,6 @@ import net.bytebuddy.utility.RandomString;
 
 @RestController
 public class UrlResource {
-	private static final String LOCALHOST = "http://localhost:8080/";
 	
 	@Autowired
 	private Urls urls;	
