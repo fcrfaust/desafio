@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,7 +29,7 @@ public class Url {
 	
 	
 	@DateTimeFormat
-	private Date expiryDate;
+	private LocalDateTime expiryDate;
 	
 	public Long getId() {
 		return id;
@@ -54,12 +55,24 @@ public class Url {
 		this.urlShort = urlShort;
 	}
 
-	public Date getExpiryDate() {
+	public LocalDateTime getExpiryDate() {
 		return expiryDate;
 	}
 	
-	public void setExpiryDate(Date expireDate) {
-		this.expiryDate = expireDate;
+	public void setExpiryDate(LocalDateTime expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	public Url(Long id, @NotNull String urlOriginal, String urlShort, LocalDateTime expiryDate) {
+		super();
+		this.id = id;
+		this.urlOriginal = urlOriginal;
+		this.urlShort = urlShort;
+		this.expiryDate = expiryDate;
+	}
+	
+	public Url() {
+		
 	}
 
 	

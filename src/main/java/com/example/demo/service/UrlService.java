@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,10 +35,9 @@ public class UrlService {
 		return repository.save(url);
 	}
 	
-	public Date createExpiryDate() {
-	    Calendar calendar = Calendar.getInstance();
-	    calendar.add(Calendar.HOUR_OF_DAY, 1);
-	    return calendar.getTime();
+	public LocalDateTime createExpiryDate() {
+		LocalDateTime calendar = LocalDateTime.now().plusHours(1L);
+	    return calendar;
 	}
 	
 	public String createShortUrl() {
@@ -56,7 +56,7 @@ public class UrlService {
 		if (url == null) 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
-		if (url.getExpiryDate().compareTo(Calendar.getInstance().getTime()) < 0)
+		if (url.getExpiryDate().compareTo(LocalDateTime.now()) < 0)
 			return ResponseEntity.status(HttpStatus.GONE).body(null);
 		
 		HttpHeaders headers = new HttpHeaders();

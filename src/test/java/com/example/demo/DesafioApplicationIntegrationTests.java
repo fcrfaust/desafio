@@ -39,7 +39,7 @@ public class DesafioApplicationIntegrationTests {
 					.andExpect(jsonPath("$[0].id").value("1"))
 					.andExpect(jsonPath("$[0].urlOriginal").value("https://www.google.com.br"))
 					.andExpect(jsonPath("$[0].urlShort").value("a1"))
-					.andExpect(jsonPath("$[0].expiryDate").value("2020-07-01T04:50:56.000+0000"));
+					.andExpect(jsonPath("$[0].expiryDate").value("2020-07-01T01:50:56"));
 	}
 	
 	@Test
