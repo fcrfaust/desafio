@@ -49,19 +49,27 @@ public class UrlService {
 	public List<Url> findAll() {
 		return repository.findAll();
 	}
+	
+	public Url findByShortUrl(String shortUrl) {
+		return repository.findByShortUrl(shortUrl);
+	}
 
-	public ResponseEntity<Url> findRedirect(String shortUrl, HttpServletResponse httpServletResponse) {
-		Url url = repository.findByShortUrl(shortUrl);
+	public ResponseEntity<Url> findRedirect(String shortUrl) {
+		Url url = this.findByShortUrl(shortUrl);
 		
 		if (url == null) 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
-		if (url.getExpiryDate().compareTo(LocalDateTime.now()) < 0)
+		if (url.getExpiryDate().compareTo(returnDateNow()) < 0)
 			return ResponseEntity.status(HttpStatus.GONE).body(null);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location", url.getUrlOriginal());    
 		return new ResponseEntity(headers,HttpStatus.FOUND);
+	}
+	
+	public LocalDateTime returnDateNow() {
+		return LocalDateTime.now();
 	}
 	
 }

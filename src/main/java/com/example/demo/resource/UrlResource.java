@@ -37,8 +37,8 @@ public class UrlResource {
 	}
 	
 	@RequestMapping(value="/{shortUrl}", method=RequestMethod.GET)
-	public ResponseEntity<Url> find(@PathVariable String shortUrl, HttpServletResponse httpServletResponse) throws URISyntaxException{	
-		return urlService.findRedirect(shortUrl,httpServletResponse);
+	public ResponseEntity<Url> find(@PathVariable String shortUrl) throws URISyntaxException{	
+		return urlService.findRedirect(shortUrl);
 	}
 	
 

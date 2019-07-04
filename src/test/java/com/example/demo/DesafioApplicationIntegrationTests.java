@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
+
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,10 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public class DesafioApplicationIntegrationTests {
 
+	private static final String URL_GITHUB = "https://github.com";
+	private static final String URL_GOOGLE = "https://www.google.com.br";
+	private static final String SHORT_URL_A1 = "a1";
+	
 	@Autowired
 	private MockMvc mockMvc;
 	
@@ -37,20 +43,20 @@ public class DesafioApplicationIntegrationTests {
 					.contentType(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$[0].id").value("1"))
-					.andExpect(jsonPath("$[0].urlOriginal").value("https://www.google.com.br"))
-					.andExpect(jsonPath("$[0].urlShort").value("a1"))
-					.andExpect(jsonPath("$[0].expiryDate").value("2020-07-01T01:50:56"));
+					.andExpect(jsonPath("$[0].urlOriginal").value(URL_GOOGLE))
+					.andExpect(jsonPath("$[0].urlShort").value(SHORT_URL_A1))
+					.andExpect(jsonPath("$[0].expiryDate").value(LocalDateTime.of(2020, 07, 01, 01, 50, 56).toString()));
 	}
 	
 	@Test
 	public void redirectShortUrlSucess() throws Exception {
 		this.mockMvc.perform(get("/a1"))
-					.andExpect(redirectedUrl("https://www.google.com.br")).andExpect(status().isFound());
+					.andExpect(redirectedUrl(URL_GOOGLE)).andExpect(status().isFound());
     }
 	
 	@Test
 	public void redirectShortUrlFail() throws Exception {
-		this.mockMvc.perform(get("/failfailfailfailfail123"))
+		this.mockMvc.perform(get("/fail123"))
 					.andExpect(status().isNotFound());
     }
 	
@@ -63,15 +69,22 @@ public class DesafioApplicationIntegrationTests {
 	@Test
 	public void registerNewShortUrl() throws Exception {
 		JSONObject json = new JSONObject();
-		json.put("urlOriginal", "https://github.com");
+		json.put("urlOriginal", URL_GITHUB);
 		this.mockMvc.perform(post("/url")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(json.toString()))
-					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.urlOriginal").value("https://github.com"))
-					.andExpect(jsonPath("$.urlShort").isNotEmpty())
-					.andExpect(jsonPath("$.expiryDate").isNotEmpty());
+					.andExpect(status().isOk());
     }		
+	
+	@Test
+	public void registerNewShortUrlUrlIsNull() throws Exception {
+		JSONObject json = new JSONObject();
+		json.put("urlOriginal", null);
+		this.mockMvc.perform(post("/url")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(json.toString()))
+					.andExpect(status().isBadRequest());
+    }	
 }
 
 
